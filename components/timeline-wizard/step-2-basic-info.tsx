@@ -62,7 +62,7 @@ interface Step2BasicInfoProps {
 export function Step2BasicInfo({ genre, initialData, onSubmit, onBack }: Step2BasicInfoProps) {
   const schema = getBasicInfoSchema(genre)
   const form = useForm<BasicInfoFormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: initialData || ({} as BasicInfoFormData),
   })
 
