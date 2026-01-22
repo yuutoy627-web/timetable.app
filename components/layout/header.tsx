@@ -2,7 +2,7 @@ import { AuthButton } from '@/components/auth/auth-button'
 import { getUser } from '@/lib/actions/auth'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Calendar } from 'lucide-react'
+import { Calendar, Settings } from 'lucide-react'
 
 export async function Header() {
   let user = null
@@ -30,6 +30,12 @@ export async function Header() {
               <Link href="/timelines/new">
                 <Button variant="ghost" size="sm">
                   新規作成
+                </Button>
+              </Link>
+              <Link href="/admin">
+                <Button variant="ghost" size="sm">
+                  <Settings className="h-4 w-4 mr-1" />
+                  管理
                 </Button>
               </Link>
             </nav>
