@@ -6,12 +6,31 @@ import { revalidatePath } from 'next/cache'
 export async function signInWithGoogle() {
   // 環境変数の検証
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  
+  // 末尾のスラッシュを削除
+  siteUrl = siteUrl.replace(/\/$/, '')
+
+  // デバッグ用ログ（本番環境でも確認可能）
+  console.log('Environment variables check:', {
+    hasSupabaseUrl: !!supabaseUrl,
+    hasSupabaseAnonKey: !!supabaseAnonKey,
+    hasSiteUrl: !!siteUrl,
+    siteUrl: siteUrl,
+  })
 
   if (!supabaseUrl) {
     console.error('NEXT_PUBLIC_SUPABASE_URL is not set')
     return { 
-      error: 'SupabaseのURLが設定されていません。Vercelダッシュボードの「Settings」→「Environment Variables」でNEXT_PUBLIC_SUPABASE_URLを設定してください。' 
+      error: 'SupabaseのURLが設定されていません。Vercelダッシュボードの「Settings」→「Environment Variables」でNEXT_PUBLIC_SUPABASE_URLを設定し、再デプロイを実行してください。' 
+    }
+  }
+
+  if (!supabaseAnonKey) {
+    console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY is not set')
+    return { 
+      error: 'Supabaseのキーが設定されていません。Vercelダッシュボードの「Settings」→「Environment Variables」でNEXT_PUBLIC_SUPABASE_ANON_KEYを設定し、再デプロイを実行してください。' 
     }
   }
 
