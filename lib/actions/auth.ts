@@ -4,20 +4,49 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function signInWithGoogle() {
-  const supabase = await createClient()
+  // 環境変数の検証
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
-    },
-  })
-
-  if (error) {
-    return { error: error.message }
+  if (!supabaseUrl) {
+    console.error('NEXT_PUBLIC_SUPABASE_URL is not set')
+    return { 
+      error: 'SupabaseのURLが設定されていません。.env.localファイルにNEXT_PUBLIC_SUPABASE_URLを設定してください。' 
+    }
   }
 
-  return { data }
+  try {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${siteUrl}/auth/callback`,
+      },
+    })
+
+    if (error) {
+      console.error('OAuth error:', error)
+      return { error: error.message }
+    }
+
+    if (!data?.url) {
+      console.error('No URL returned from OAuth')
+      return { 
+        error: '認証URLの取得に失敗しました。Supabaseの設定を確認してください。' 
+      }
+    }
+
+    // デバッグ用ログ（本番環境では削除推奨）
+    console.log('OAuth redirect URL:', data.url)
+
+    return { data }
+  } catch (error) {
+    console.error('Sign in error:', error)
+    return { 
+      error: error instanceof Error ? error.message : '認証中にエラーが発生しました。' 
+    }
+  }
 }
 
 export async function signOut() {

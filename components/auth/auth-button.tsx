@@ -27,11 +27,15 @@ export function AuthButton({ user }: AuthButtonProps) {
       const { data, error } = await signInWithGoogle()
       if (error) {
         console.error('Sign in error:', error)
+        alert(`ログインエラー: ${error}`)
       } else if (data?.url) {
         window.location.href = data.url
+      } else {
+        alert('認証URLの取得に失敗しました。環境変数の設定を確認してください。')
       }
     } catch (error) {
       console.error('Sign in error:', error)
+      alert(`ログイン中にエラーが発生しました: ${error instanceof Error ? error.message : '不明なエラー'}`)
     } finally {
       setIsLoading(false)
     }
