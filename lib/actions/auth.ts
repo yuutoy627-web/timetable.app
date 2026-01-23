@@ -11,7 +11,7 @@ export async function signInWithGoogle() {
   if (!supabaseUrl) {
     console.error('NEXT_PUBLIC_SUPABASE_URL is not set')
     return { 
-      error: 'SupabaseのURLが設定されていません。.env.localファイルにNEXT_PUBLIC_SUPABASE_URLを設定してください。' 
+      error: 'SupabaseのURLが設定されていません。Vercelダッシュボードの「Settings」→「Environment Variables」でNEXT_PUBLIC_SUPABASE_URLを設定してください。' 
     }
   }
 
