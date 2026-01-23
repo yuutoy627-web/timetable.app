@@ -20,13 +20,14 @@ export async function GET(request: Request) {
 
       if (!profile) {
         await supabase
-          .from('profiles')
-          .insert({
-            id: session.user.id,
-            email: session.user.email,
-            full_name: session.user.user_metadata?.full_name || session.user.email || 'User',
-            avatar_url: session.user.user_metadata?.avatar_url || null,
-          })
+        .from('profiles')
+        .insert({
+          id: session.user.id,
+          email: session.user.email,
+          full_name: session.user.user_metadata?.full_name || session.user.email || 'User',
+          avatar_url: session.user.user_metadata?.avatar_url,
+          updated_at: new Date().toISOString(),
+        } as any)
       }
     }
   }
